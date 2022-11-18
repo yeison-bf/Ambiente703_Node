@@ -1,10 +1,14 @@
 const express = require('express')
 const cors = require('cors')
+const { MongoDBConexion } = require('../public/db/config.db')
 
 class Server {
 
     constructor(){
         this.app = express();
+
+        //Conexión
+        this.ConexionDBs();
 
         // Definición del puerto
         this.port = process.env.PORT;
@@ -18,39 +22,29 @@ class Server {
     }
 
 
+    //Conexión a la DB
+    ConexionDBs(){
+        MongoDBConexion();
+    }
+
     middleware(){
 
         // Definición carpeta pública
         this.app.use( express.static('public') );
 
+        //Tipos de datos a recibir JSON
+        this.app.use( express.json() )
+
         // Definición de los cors
-        app.use(cors())
+        this.app.use(cors())
 
     }
 
-
     route(){
-        this.app.get('/api', (req, res) => {
-            res.send({
-                "ok": 200,
-                "Nombre" : "Manuela",
-                "Apellido" : "De Giraldo",
-                "Direccion" : "Medellin",
-                "Estado" : true
-            })
-        })
+        
+        this.app.use( '/api/user/', require('../public/routes/users.routes'));
+        this.app.use( '/api/products/', require('../public/routes/products.routes'));
 
-        this.app.post('/api', (req, res) => {
-            res.send('Peticion desde el Post!')
-        })
-
-        this.app.put('/api', (req, res) => {
-            res.send('Peticion desde el Put!')
-        })
-
-        this.app.delete('/api', (req, res) => {
-            res.send('Peticion desde el Delete!')
-        })
     }
 
     listen(){
