@@ -17,3 +17,7 @@ const MongoDBConexion = ()=>{
 module.exports = {
     MongoDBConexion
 }
+
+
+// callback
+// promises

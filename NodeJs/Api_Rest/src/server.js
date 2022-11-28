@@ -27,6 +27,7 @@ class Server {
         MongoDBConexion();
     }
 
+
     middleware(){
 
         // Definición carpeta pública
@@ -36,12 +37,14 @@ class Server {
         this.app.use( express.json() )
 
         // Definición de los cors
-        this.app.use(cors())
+        //this.app.use(cors())
 
     }
 
+    
     route(){
         
+        this.app.use( '/api/auth/', require('../public/routes/auth.routes'));
         this.app.use( '/api/user/', require('../public/routes/users.routes'));
         this.app.use( '/api/products/', require('../public/routes/products.routes'));
 

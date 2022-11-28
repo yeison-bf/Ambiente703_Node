@@ -30,9 +30,9 @@ const UserModels = new Schema({
         required:["El telefono es obligatorio!"]
     },
 
-    usuario:{
+    email:{
         type:String,
-        required:["El usuario es obligatorio!"],
+        required:["El email es obligatorio!"],
         unique:true
     },
 
@@ -40,6 +40,12 @@ const UserModels = new Schema({
     password:{
         type:String,
         required:["El password es obligatorio!"]
+    },
+
+
+    role:{
+        type:String,
+        required:["El rol es obligatorio!"]
     },
 
     estado:{

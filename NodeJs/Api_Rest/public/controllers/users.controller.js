@@ -1,6 +1,4 @@
-
-const bcryptjs = require('bcryptjs');
-
+const bcryptjs = require("bcryptjs");
 
 const User = require("../models/user.models");
 
@@ -13,11 +11,21 @@ const getUsers = async (req, res) => {
 };
 
 const postUser = async (req, res) => {
-  const {identificacion, nombre, apellidos, direccion, telefono, usuario, password } = req.body;
-  const user = await new User( {identificacion, nombre, apellidos, direccion, telefono, usuario, password });
+
+  const {identificacion,nombre,apellidos,direccion,telefono,email,password,role} = req.body;
+
+
+  const userExisting = await User.findOne({identificacion});
+  if(userExisting){
+    return res.status(400).json({
+      "msg": `El documento registrado: ${identificacion}, ya existe en la base de datos`
+    })
+  }
+
+  const user = await new User({identificacion,nombre,apellidos,direccion,telefono,email,password,role});
 
   const salt = bcryptjs.genSaltSync();
-  user.password = bcryptjs.hashSync( password, salt)
+  user.password = bcryptjs.hashSync(password, salt);
 
   await user.save();
 
@@ -31,6 +39,12 @@ const putUser = async (req, res) => {
   const user_id = req.params.id;
   const data = req.body;
   const user = await User.findByIdAndUpdate(user_id, data);
+
+  const error = validationResult(req);
+  if(!error.isEmpty()){
+    return res.status(400).json(error)
+  }
+
 
   await user.save();
 
@@ -48,10 +62,10 @@ const deleteUser = async (req, res) => {
   const user = await User.findByIdAndUpdate(user_id, { estado });
 
   let msg = "";
-  if(estado === false){
-    msg= "Usuario eliminado";
-  }else{
-    msg= "Usuario activado";
+  if (estado === false) {
+    msg = "Usuario eliminado";
+  } else {
+    msg = "Usuario activado";
   }
   await user.save();
 
